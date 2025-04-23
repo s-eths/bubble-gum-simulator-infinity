@@ -386,31 +386,31 @@ local UnlockAllIslands = TabALTSetup:CreateButton({
     end;
 });
 
-local CPUSaver = TabALTSetup:CreateToggle({
-    Name = "CPU Saver";
-    CurrentValue = false;
-    Flag = "Toggle1";
-    Callback = function(Value)
-        getgenv().Functions.CPUSaver = Value;
-        if Functions.CPUSaver then
-            local ScreenGui = Instance.new("ScreenGui");
-            ScreenGui.Name = "BlackoutGui";
-            ScreenGui.ResetOnSpawn = false;
-            ScreenGui.IgnoreGuiInset = true;
-            ScreenGui.Parent = game:GetService("CoreGui");
-            local BlackFrame = Instance.new("Frame");
-            BlackFrame.Size = UDim2.new(1, 0, 1, 0);
-            BlackFrame.Position = UDim2.new(0, 0, 0, 0);
-            BlackFrame.BackgroundColor3 = Color3.new(0, 0, 0);
-            BlackFrame.BorderSizePixel = 0;
-            BlackFrame.Parent = ScreenGui;
-            game:GetService("RunService"):Set3dRenderingEnabled(false);
-        elseif not Functions.CPUSaver then
-            game:GetService("RunService"):Set3dRenderingEnabled(true);
-            game:GetService("CoreGui").BlackoutGui:Destroy();
-        end;
-    end;
-});
+-- local CPUSaver = TabALTSetup:CreateToggle({
+--     Name = "CPU Saver";
+--     CurrentValue = false;
+--     Flag = "Toggle1";
+--     Callback = function(Value)
+--         getgenv().Functions.CPUSaver = Value;
+--         if Functions.CPUSaver then
+--             local ScreenGui = Instance.new("ScreenGui");
+--             ScreenGui.Name = "BlackoutGui";
+--             ScreenGui.ResetOnSpawn = false;
+--             ScreenGui.IgnoreGuiInset = true;
+--             ScreenGui.Parent = game:GetService("CoreGui");
+--             local BlackFrame = Instance.new("Frame");
+--             BlackFrame.Size = UDim2.new(1, 0, 1, 0);
+--             BlackFrame.Position = UDim2.new(0, 0, 0, 0);
+--             BlackFrame.BackgroundColor3 = Color3.new(0, 0, 0);
+--             BlackFrame.BorderSizePixel = 0;
+--             BlackFrame.Parent = ScreenGui;
+--             game:GetService("RunService"):Set3dRenderingEnabled(false);
+--         elseif not Functions.CPUSaver then
+--             game:GetService("RunService"):Set3dRenderingEnabled(true);
+--             game:GetService("CoreGui").BlackoutGui:Destroy();
+--         end;
+--     end;
+-- });
 
 local SetFPSCap = TabALTSetup:CreateSlider({
     Name = "Set FPS Cap";
