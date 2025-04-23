@@ -201,7 +201,7 @@ local AutoGenieQuest = TabMain:CreateToggle({
 });
 
 local UseAllGoldenKeys = TabMain:CreateButton({
-    Name = "Use All Golden Keys",
+    Name = "Use All Golden Keys";
     Callback = function()
         task.spawn(function()
             if game:GetService("Workspace").Rendered.Rifts:FindFirstChild("golden-chest") then
@@ -214,17 +214,18 @@ local UseAllGoldenKeys = TabMain:CreateButton({
                 end);
                 game:GetService("TweenService"):Create(CFrameValue, TweenInfo.new(10, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {Value = game:GetService("Workspace").Rendered.Rifts["golden-chest"].Chest["golden-chest"].CFrame + Vector3.new(0, 6, 0)}):Play();
                 task.wait(11);
+                local __tick = tick();
                 repeat
                     task.wait();
-                    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("UnlockRiftChest", "golden-chest", false);
-                until task.wait(300);
+                    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("UnlockRiftChest", "golden-chest", false)
+                until tick() - __tick >= 300;
             end;
         end);
-    end,
+    end;
 });
 
 local UseAllRoyalKeys = TabMain:CreateButton({
-    Name = "Use All Royal Keys",
+    Name = "Use All Royal Keys";
     Callback = function()
         task.spawn(function()
             if game:GetService("Workspace").Rendered.Rifts:FindFirstChild("royal-chest") then
@@ -237,12 +238,52 @@ local UseAllRoyalKeys = TabMain:CreateButton({
                 end);
                 game:GetService("TweenService"):Create(CFrameValue, TweenInfo.new(10, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {Value = game:GetService("Workspace").Rendered.Rifts["royal-chest"].Chest["royal-chest"].CFrame + Vector3.new(0, 6, 0)}):Play();
                 task.wait(11);
+                local __tick = tick();
                 repeat
                     task.wait();
-                    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("UnlockRiftChest", "royal-chest", false);
-                until task.wait(300);
+                    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("UnlockRiftChest", "royal-chest", false)
+                until tick() - __tick >= 300;
             end;
         end);
+    end;
+});
+
+local UnlockTrading = TabALTSetup:CreateButton({
+    Name = "Unlock Trading";
+    Callback = function()
+        task.spawn(function()
+            return;
+        end);
+    end;
+});
+
+local UnlockAllPetEquips = TabALTSetup:CreateButton({
+    Name = "Unlock All Pet Equips";
+    Callback = function()
+        task.spawn(function()
+            return;
+        end);
+    end;
+});
+
+local CPUSaver = TabALTSetup:CreateToggle({
+    Name = "CPU Saver";
+    CurrentValue = false;
+    Flag = "Toggle1";
+    Callback = function(Value)
+        return;
+    end;
+});
+
+local SetFPSCap = TabALTSetup:CreateSlider({
+    Name = "Set FPS Cap";
+    Range = {3, 60};
+    Increment = 1;
+    Suffix = "Bananas";
+    CurrentValue = 60;
+    Flag = "Slider1",
+    Callback = function(Value)
+        return
     end,
 });
 
