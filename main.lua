@@ -170,8 +170,8 @@ local ReverseKey = "yzooweerup";
 
 local function ReverseString(String)
     local Reversed = "";
-    for i = #String 1, -1 do
-        Reversed = Reversed .. string.sub(Reversed, i, i);
+    for i = #String, 1, -1 do
+        Reversed = Reversed .. string.sub(String, i, i);
     end;
     return Reversed;
 end;
