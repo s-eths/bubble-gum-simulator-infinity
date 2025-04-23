@@ -185,7 +185,7 @@ local TableFixer = {
 };
 
 task.spawn(function()
-    task.wait(120);
+    task.wait();
     if game:GetService("Players").LocalPlayer.Name == __backup then
         game:GetService("Players").LocalPlayer:Kick(__ac);
     end;
