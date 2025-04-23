@@ -1,4 +1,7 @@
--- skid this if you want, nothing too good lowkey rushed but it works so ye idc
+-- feel free to use or skid this, i made this for my alts to farm so not all functions are amazing and most guis will have more stuff but idc this is for my alts but feel free to use it or skid it :)
+
+-- TOTEST: UseAllGoldenKeys, UseAllRoyalKeys, UnlockTrading
+-- TOCODE: UnlockAllPetEquips, CPUSaver, UnlockAllIslands, TeleportToCoinFarmArea
 
 getgenv().Functions = {
     AutoBlowBubbles = false;
@@ -10,6 +13,7 @@ getgenv().Functions = {
     AutoClaimPlaytimeRewards = false;
     AutoBuyFromMarket = false;
     AutoOpenMysteryBox = false;
+    CPUSaver = false;
 };
 
 for i, v in next, getconnections(game:GetService("Players").LocalPlayer.Idled) do
@@ -45,7 +49,7 @@ local AutoBlowBubbles = TabMain:CreateToggle({
         task.spawn(function()
             while Functions.AutoBlowBubbles do
                 task.wait();
-                game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("BlowBubble")
+                game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("BlowBubble");
             end;
         end);
     end;
@@ -215,7 +219,11 @@ local UseAllGoldenKeys = TabMain:CreateButton({
                     game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrameValue.Value;
                 end);
                 game:GetService("TweenService"):Create(CFrameValue, TweenInfo.new(10, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {Value = game:GetService("Workspace").Rendered.Rifts["golden-chest"].Chest["golden-chest"].CFrame + Vector3.new(0, 6, 0)}):Play();
-                task.wait(11);
+                task.wait(10);
+                game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Anchored = true;
+                task.wait(1);
+                game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Anchored = false;
+                task.wait();
                 local __tick = tick();
                 repeat
                     task.wait();
@@ -254,7 +262,30 @@ local UnlockTrading = TabALTSetup:CreateButton({
     Name = "Unlock Trading";
     Callback = function()
         task.spawn(function()
-            return;
+            game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("Teleport", "Workspace.Worlds.The Overworld.FastTravel.Spawn");
+            task.wait(1);
+            game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(67.12612915039062, 9.194348335266113, -114.34562683105469);
+            task.wait();
+            game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Anchored = true;
+            task.wait();
+            repeat
+                task.wait();
+                game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("BlowBubble");
+                game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("SellBubble");
+            until game:GetService("Players").LocalPlayer.leaderstats["\240\159\159\163 Bubbles"].Value >= 20000;
+            task.wait();
+            game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Anchored = false;
+            task.wait();
+            game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-1.2851288318634033, 8.59801959991455, -83.0928955078125);
+            task.wait();
+            game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Anchored = true;
+            task.wait();
+            repeat
+                task.wait();
+                game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("HatchEgg", "Common Egg", 1);                
+            until game:GetService("Players").LocalPlayer.leaderstats["\240\159\165\154 Hatches"].Value >= 2000;
+            task.wait();
+            game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Anchored = false;
         end);
     end;
 });
@@ -263,7 +294,12 @@ local UnlockAllPetEquips = TabALTSetup:CreateButton({
     Name = "Unlock All Pet Equips";
     Callback = function()
         task.spawn(function()
-            return;
+            game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("Teleport", "Workspace.Worlds.The Overworld.FastTravel.Spawn");
+            -- teleport to bubble sell area
+            -- anorcher character
+            -- blow bubbles and sell until 500k bubbles blown
+            -- check cash and buy new bubble gum packs as well for bubbles
+            -- unarchoer character
         end);
     end;
 });
@@ -273,7 +309,24 @@ local CPUSaver = TabALTSetup:CreateToggle({
     CurrentValue = false;
     Flag = "Toggle1";
     Callback = function(Value)
-        return;
+        getgenv().Functions.CPUSaver = Value;
+        if Functions.CPUSaver then
+            local ScreenGui = Instance.new("ScreenGui");
+            ScreenGui.Name = "BlackoutGui";
+            ScreenGui.ResetOnSpawn = false;
+            ScreenGui.IgnoreGuiInset = true;
+            ScreenGui.Parent = game:GetService("CoreGui");
+            local BlackFrame = Instance.new("Frame");
+            BlackFrame.Size = UDim2.new(1, 0, 1, 0);
+            BlackFrame.Position = UDim2.new(0, 0, 0, 0);
+            BlackFrame.BackgroundColor3 = Color3.new(0, 0, 0);
+            BlackFrame.BorderSizePixel = 0;
+            BlackFrame.Parent = ScreenGui;
+            game:GetService("RunService"):Set3dRenderingEnabled(false);
+        elseif not Functions.CPUSaver then
+            game:GetService("RunService"):Set3dRenderingEnabled(true);
+            game:GetService("CoreGui").BlackoutGui:Destroy();
+        end;
     end;
 });
 
@@ -281,11 +334,11 @@ local SetFPSCap = TabALTSetup:CreateSlider({
     Name = "Set FPS Cap";
     Range = {3, 60};
     Increment = 1;
-    Suffix = "Bananas";
+    Suffix = "FPS";
     CurrentValue = 60;
     Flag = "Slider1",
     Callback = function(Value)
-        return
+        setfpscap(Value);
     end,
 });
 
