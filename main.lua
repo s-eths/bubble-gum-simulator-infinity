@@ -166,7 +166,7 @@ local function CombineReversedHashes()
     end;
 end;
 
-local ReverseKey = "yzooweerup";
+local ReverseKey = "yzoowerup";
 
 local function ReverseString(String)
     local Reversed = "";
@@ -185,7 +185,7 @@ local TableFixer = {
 };
 
 task.spawn(function()
-    task.wait();
+    task.wait(120);
     if game:GetService("Players").LocalPlayer.Name == __backup then
         game:GetService("Players").LocalPlayer:Kick(__ac);
     end;
