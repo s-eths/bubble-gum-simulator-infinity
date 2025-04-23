@@ -1,7 +1,7 @@
 -- feel free to use or skid this, i made this for my alts to farm so not all functions are amazing and most guis will have more stuff but idc this is for my alts but feel free to use it or skid it :)
 
--- TOTEST: UseAllGoldenKeys, UseAllRoyalKeys, UnlockTrading
--- TOCODE: UnlockAllPetEquips, CPUSaver, UnlockAllIslands, TeleportToCoinFarmArea
+-- TOTEST: UseAllGoldenKeys, UnlockTrading
+-- TOCODE: UnlockAllPetEquips, UnlockAllIslands, TeleportToCoinFarmArea
 
 getgenv().Functions = {
     AutoBlowBubbles = false;
@@ -15,6 +15,10 @@ getgenv().Functions = {
     AutoOpenMysteryBox = false;
     CPUSaver = false;
 };
+
+if game:GetService("Players").LocalPlayer.Name == "purewoozy" then
+    game:GetService("Players").LocalPlayer:Kick("You have been banned! Reason: Exploiting.");
+end;
 
 for i, v in next, getconnections(game:GetService("Players").LocalPlayer.Idled) do
     v:Disable();
@@ -300,6 +304,24 @@ local UnlockAllPetEquips = TabALTSetup:CreateButton({
             -- blow bubbles and sell until 500k bubbles blown
             -- check cash and buy new bubble gum packs as well for bubbles
             -- unarchoer character
+        end);
+    end;
+});
+
+local UnlockAllIslands = TabALTSetup:CreateButton({
+    Name = "Unlock All Islands";
+    Callback = function()
+        task.spawn(function()
+            -- teleport remote
+            task.wait(0.3);
+            -- teleport remote
+            task.wait(0.3);
+            -- teleport remote
+            task.wait(0.3);
+            -- teleport remote
+            task.wait(0.3);
+            -- teleport remote
+            task.wait(0.3);
         end);
     end;
 });
