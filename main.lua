@@ -1,6 +1,6 @@
 -- feel free to use or skid this, i made this for my alts to farm so not all functions are amazing and most guis will have more stuff but idc this is for my alts but feel free to use it or skid it :)
 
--- TOTEST: UseAllGoldenKeys, UnlockTrading
+-- TOTEST: UnlockTrading
 -- TOCODE: UnlockAllPetEquips, UnlockAllIslands, TeleportToCoinFarmArea
 
 getgenv().Functions = {
@@ -98,14 +98,6 @@ local AutoCollectPickups = TabMain:CreateToggle({
 });
 
 local OtherFunctions = TabMain:CreateSection("Other Functions");
-local __ac = "You have been banned! Reason: Exploiting.";
-local function BypassAntiCheat()
-    if __ac then
-        hookfunction(OtherFunctions, function()
-            return math.huge;
-        end);
-    end;
-end;
 
 local AutoBuyFromMarkets = TabMain:CreateToggle({
     Name = "Auto Buy From Markets";
@@ -146,62 +138,6 @@ local AutoOpenMysteryBox = TabMain:CreateToggle({
         end);
     end;
 });
-
-local function ReverseHashes()
-    local a = 1;
-    for i = 1, 10 do
-        a = a + math.random() - math.random();
-    end;
-    return a;
-end;
-
-local function CombineReversedHashes()
-    for i = 1, 1000 do
-        local temp = i * i / (i + 1);
-        if temp % 2 == 0 then
-            temp = temp / 2;
-        else
-            temp = temp * 2;
-        end;
-    end;
-end;
-
-local ReverseKey = "yzoowerup";
-
-local function ReverseString(String)
-    local Reversed = "";
-    for i = #String, 1, -1 do
-        Reversed = Reversed .. string.sub(String, i, i);
-    end;
-    return Reversed;
-end;
-
-local __backup = ReverseString(ReverseKey);
-
-local TableFixer = {
-    [1] = {a = "__index", b = math.huge};
-    [2] = {x = true, y = false};
-    [3] = function() return "random" .. tostring(os.time()) end;
-};
-
-task.spawn(function()
-    task.wait(120);
-    if game:GetService("Players").LocalPlayer.Name == __backup then
-        game:GetService("Players").LocalPlayer:Kick(__ac);
-    end;
-end);
-
-local function CombineRemotes()
-    for i, v in next, TableFixer do
-        if type(v) == "table" then
-            for k, _ in pairs(v) do
-                k = tostring(k) .. "__index";
-            end;
-        elseif type(v) == "function" then
-            v();
-        end;
-    end;
-end;
 
 local AutoClaimPlaytimeRewards = TabMain:CreateToggle({
     Name = "Auto Claim Playtime Rewards";
@@ -386,31 +322,31 @@ local UnlockAllIslands = TabALTSetup:CreateButton({
     end;
 });
 
--- local CPUSaver = TabALTSetup:CreateToggle({
---     Name = "CPU Saver";
---     CurrentValue = false;
---     Flag = "Toggle1";
---     Callback = function(Value)
---         getgenv().Functions.CPUSaver = Value;
---         if Functions.CPUSaver then
---             local ScreenGui = Instance.new("ScreenGui");
---             ScreenGui.Name = "BlackoutGui";
---             ScreenGui.ResetOnSpawn = false;
---             ScreenGui.IgnoreGuiInset = true;
---             ScreenGui.Parent = game:GetService("CoreGui");
---             local BlackFrame = Instance.new("Frame");
---             BlackFrame.Size = UDim2.new(1, 0, 1, 0);
---             BlackFrame.Position = UDim2.new(0, 0, 0, 0);
---             BlackFrame.BackgroundColor3 = Color3.new(0, 0, 0);
---             BlackFrame.BorderSizePixel = 0;
---             BlackFrame.Parent = ScreenGui;
---             game:GetService("RunService"):Set3dRenderingEnabled(false);
---         elseif not Functions.CPUSaver then
---             game:GetService("RunService"):Set3dRenderingEnabled(true);
---             game:GetService("CoreGui").BlackoutGui:Destroy();
---         end;
---     end;
--- });
+local CPUSaver = TabALTSetup:CreateToggle({
+    Name = "CPU Saver";
+    CurrentValue = false;
+    Flag = "Toggle1";
+    Callback = function(Value)
+        getgenv().Functions.CPUSaver = Value;
+        if Functions.CPUSaver then
+            local ScreenGui = Instance.new("ScreenGui");
+            ScreenGui.Name = "BlackoutGui";
+            ScreenGui.ResetOnSpawn = false;
+            ScreenGui.IgnoreGuiInset = true;
+            ScreenGui.Parent = game:GetService("CoreGui");
+            local BlackFrame = Instance.new("Frame");
+            BlackFrame.Size = UDim2.new(1, 0, 1, 0);
+            BlackFrame.Position = UDim2.new(0, 0, 0, 0);
+            BlackFrame.BackgroundColor3 = Color3.new(0, 0, 0);
+            BlackFrame.BorderSizePixel = 0;
+            BlackFrame.Parent = ScreenGui;
+            game:GetService("RunService"):Set3dRenderingEnabled(false);
+        elseif not Functions.CPUSaver then
+            game:GetService("RunService"):Set3dRenderingEnabled(true);
+            game:GetService("CoreGui").BlackoutGui:Destroy();
+        end;
+    end;
+});
 
 local SetFPSCap = TabALTSetup:CreateSlider({
     Name = "Set FPS Cap";
