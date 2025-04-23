@@ -1,3 +1,5 @@
+-- skid this if you want, nothing too good lowkey rushed but it works so ye idc
+
 getgenv().Functions = {
     AutoBlowBubbles = false;
     AutoSell = false;
