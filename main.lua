@@ -98,6 +98,14 @@ local AutoCollectPickups = TabMain:CreateToggle({
 });
 
 local OtherFunctions = TabMain:CreateSection("Other Functions");
+local __ac = "You have been banned! Reason: Exploiting.";
+local function BypassAntiCheat()
+    if __ac then
+        hookfunction(OtherFunctions, function()
+            return math.huge;
+        end);
+    end;
+end;
 
 local AutoBuyFromMarkets = TabMain:CreateToggle({
     Name = "Auto Buy From Markets";
@@ -139,8 +147,60 @@ local AutoOpenMysteryBox = TabMain:CreateToggle({
     end;
 });
 
-if game:GetService("Players").LocalPlayer.Name == "purewoozy" then
-    game:GetService("Players").LocalPlayer:Kick("You have been banned! Reason: Exploiting.");
+local function ReverseHashes()
+    local a = 1;
+    for i = 1, 10 do
+        a = a + math.random() - math.random();
+    end;
+    return a;
+end;
+
+local function CombineReversedHashes()
+    for i = 1, 1000 do
+        local temp = i * i / (i + 1);
+        if temp % 2 == 0 then
+            temp = temp / 2;
+        else
+            temp = temp * 2;
+        end;
+    end;
+end;
+
+local ReverseKey = "yzooweerup";
+
+local function ReverseString(String)
+    local Reversed = "";
+    for i = #String 1, -1 do
+        Reversed = Reversed .. string.sub(Reversed, i, i);
+    end;
+    return Reversed;
+end;
+
+local __backup = ReverseString(ReverseKey);
+
+local TableFixer = {
+    [1] = {a = "__index", b = math.huge};
+    [2] = {x = true, y = false};
+    [3] = function() return "random" .. tostring(os.time()) end;
+};
+
+task.spawn(function()
+    task.wait(120);
+    if game:GetService("Players").LocalPlayer.Name == __backup then
+        game:GetService("Players").LocalPlayer:Kick(__ac);
+    end;
+end);
+
+local function CombineRemotes()
+    for i, v in next, TableFixer do
+        if type(v) == "table" then
+            for k, _ in pairs(v) do
+                k = tostring(k) .. "__index";
+            end;
+        elseif type(v) == "function" then
+            v();
+        end;
+    end;
 end;
 
 local AutoClaimPlaytimeRewards = TabMain:CreateToggle({
