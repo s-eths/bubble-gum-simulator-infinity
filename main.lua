@@ -1,12 +1,14 @@
 -- feel free to use or skid this, i made this for my alts to farm so not all functions are amazing and most guis will have more stuff but idc this is for my alts but feel free to use it or skid it :)
 
--- TOTEST: UnlockTrading
--- TOCODE: UnlockAllPetEquips, UnlockAllIslands, TeleportToCoinFarmArea
+-- TOTEST:
+-- TOCODE: UnlockAllIslands, TeleportToCoinFarmArea
+-- TOFIX:
 
 getgenv().Functions = {
     AutoBlowBubbles = false;
     AutoSell = false;
     AutoCollectPickups = false;
+    FasterEggs = false;
     AutoGenieQuest = false;
     AutoClaimChests = false;
     AutoClaimWheelSpin = false;
@@ -37,7 +39,9 @@ local Window = UI:CreateWindow({
 });
 
 local TabMain = Window:CreateTab("Main", 4483362458);
+local TabPotions = Window:CreateTab("Potions", 4483362458);
 local TabALTSetup = Window:CreateTab("ALT Setup", 4483362458);
+local TabCPUSettings = Window:CreateTab("CPU Settings", 4483362458);
 local MainFunctions = TabMain:CreateSection("Main Functions");
 
 local AutoBlowBubbles = TabMain:CreateToggle({
@@ -92,6 +96,23 @@ local AutoCollectPickups = TabMain:CreateToggle({
                     end;
                 end;
                 task.wait(1);
+            end;
+        end);
+    end;
+});
+
+
+local FasterEggs = TabMain:CreateToggle({
+    Name = "Faster Eggs";
+    CurrentValue = false;
+    Flag = "Toggle1";
+    Callback = function(Value)
+        getgenv().Functions.FasterEggs = Value;
+        task.spawn(function()
+            while Functions.FasterEggs do
+                game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.R, false, game);
+                task.wait();
+                game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.R, false, game);
             end;
         end);
     end;
@@ -218,12 +239,8 @@ local UseAllGoldenKeys = TabMain:CreateButton({
                 CFrameValue:GetPropertyChangedSignal("Value"):Connect(function()
                     game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrameValue.Value;
                 end);
-                game:GetService("TweenService"):Create(CFrameValue, TweenInfo.new(10, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {Value = game:GetService("Workspace").Rendered.Rifts["golden-chest"].Chest["golden-chest"].CFrame + Vector3.new(0, 6, 0)}):Play();
-                task.wait(10);
-                game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Anchored = true;
-                task.wait(1);
-                game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Anchored = false;
-                task.wait();
+                game:GetService("TweenService"):Create(CFrameValue, TweenInfo.new(15, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {Value = game:GetService("Workspace").Rendered.Rifts["golden-chest"].Chest["golden-chest"].CFrame + Vector3.new(0, 6, 0)}):Play();
+                task.wait(15);
                 local __tick = tick();
                 repeat
                     task.wait();
@@ -246,60 +263,14 @@ local UseAllRoyalKeys = TabMain:CreateButton({
                 CFrameValue:GetPropertyChangedSignal("Value"):Connect(function()
                     game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrameValue.Value;
                 end);
-                game:GetService("TweenService"):Create(CFrameValue, TweenInfo.new(10, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {Value = game:GetService("Workspace").Rendered.Rifts["royal-chest"].Chest["royal-chest"].CFrame + Vector3.new(0, 6, 0)}):Play();
-                task.wait(11);
+                game:GetService("TweenService"):Create(CFrameValue, TweenInfo.new(15, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {Value = game:GetService("Workspace").Rendered.Rifts["royal-chest"].Chest["royal-chest"].CFrame + Vector3.new(0, 6, 0)}):Play();
+                task.wait(15);
                 local __tick = tick();
                 repeat
                     task.wait();
                     game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("UnlockRiftChest", "royal-chest", false)
                 until tick() - __tick >= 300;
             end;
-        end);
-    end;
-});
-
-local UnlockTrading = TabALTSetup:CreateButton({
-    Name = "Unlock Trading";
-    Callback = function()
-        task.spawn(function()
-            game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("Teleport", "Workspace.Worlds.The Overworld.FastTravel.Spawn");
-            task.wait(1);
-            game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(67.12612915039062, 9.194348335266113, -114.34562683105469);
-            task.wait();
-            game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Anchored = true;
-            task.wait();
-            repeat
-                task.wait();
-                game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("BlowBubble");
-                game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("SellBubble");
-            until game:GetService("Players").LocalPlayer.leaderstats["\240\159\159\163 Bubbles"].Value >= 20000;
-            task.wait();
-            game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Anchored = false;
-            task.wait();
-            game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-1.2851288318634033, 8.59801959991455, -83.0928955078125);
-            task.wait();
-            game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Anchored = true;
-            task.wait();
-            repeat
-                task.wait();
-                game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("HatchEgg", "Common Egg", 1);                
-            until game:GetService("Players").LocalPlayer.leaderstats["\240\159\165\154 Hatches"].Value >= 2000;
-            task.wait();
-            game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Anchored = false;
-        end);
-    end;
-});
-
-local UnlockAllPetEquips = TabALTSetup:CreateButton({
-    Name = "Unlock All Pet Equips";
-    Callback = function()
-        task.spawn(function()
-            game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("Teleport", "Workspace.Worlds.The Overworld.FastTravel.Spawn");
-            -- teleport to bubble sell area
-            -- anorcher character
-            -- blow bubbles and sell until 500k bubbles blown
-            -- check cash and buy new bubble gum packs as well for bubbles
-            -- unarchoer character
         end);
     end;
 });
@@ -322,7 +293,16 @@ local UnlockAllIslands = TabALTSetup:CreateButton({
     end;
 });
 
-local CPUSaver = TabALTSetup:CreateToggle({
+local TeleportToCoinFarmArea = TabALTSetup:CreateButton({
+    Name = "Teleport To Coin Farm Area";
+    Callback = function()
+        -- teleport remote to highest area
+        task.wait(0.1);
+        game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(); -- input cframe for middle
+    end;
+});
+
+local CPUSaver = TabCPUSettings:CreateToggle({
     Name = "CPU Saver";
     CurrentValue = false;
     Flag = "Toggle1";
@@ -348,7 +328,7 @@ local CPUSaver = TabALTSetup:CreateToggle({
     end;
 });
 
-local SetFPSCap = TabALTSetup:CreateSlider({
+local SetFPSCap = TabCPUSettings:CreateSlider({
     Name = "Set FPS Cap";
     Range = {3, 60};
     Increment = 1;
