@@ -1,7 +1,7 @@
 -- i made this for my alts to farm, so not all functions were made to be retard proof or amazing, most guis will have more stuff as well.
 -- but feel free to use or skid this. 🙂👍
 
--- v1.1 ; loadstring(game:HttpGet("https://raw.githubusercontent.com/s-eths/bubble-gum-simulator-infinity/refs/heads/main/main.lua", true))();
+-- v1.2 ; loadstring(game:HttpGet("https://raw.githubusercontent.com/s-eths/bubble-gum-simulator-infinity/refs/heads/main/main.lua", true))();
 
 getgenv().Functions = {
     AutoBlowBubbles = false;
@@ -54,19 +54,26 @@ local function TweenTo(Position, Speed)
     game:GetService("TweenService"):Create(CFrameValue, TweenInfo.new(Speed, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {Value = Position}):Play();
 end;
 
-local function Fetchx25Eggs()
+local function FetchRiftEggs(x25)
+    local FoundRiftEggs = {};
     local Foundx25Eggs = {};
 
     for i, v in next, game:GetService("Workspace").Rendered.Rifts:GetChildren() do
         if not table.find({"golden-chest", "royal-chest", "gift-rift"}, v.Name) then
             if v.Display.SurfaceGui.Icon.Luck.Text == "x25" then
                 table.insert(Foundx25Eggs, v);
+            else
+                table.insert(FoundRiftEggs, v);
             end;
         end;
     end;
     
-    return Foundx25Eggs;
-end
+    if x25 then
+        return Foundx25Eggs;
+    else
+        return FoundRiftEggs;
+    end;
+end;
 
 local function FancyNumberTranslator(FancyNumber)
     local FancyNumbers = {
@@ -453,6 +460,29 @@ local UseHatchingPotions = TabsPotionsUse:AddButton({
 
 local TabsRiftsEggs = Tabs.Rifts:AddLeftGroupbox("Eggs");
 
+local RiftEggsDropdown = TabsRiftsEggs:AddDropdown("RiftEggsDropdown", {
+    Values = {};
+    Default = 1;
+
+    Text = "Rift Eggs";
+
+    Callback = function(Value)
+        if Value then
+            game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("Teleport", "Workspace.Worlds.The Overworld.FastTravel.Spawn");
+            task.wait(1);
+            TweenTo(Value.Display.CFrame, 15);
+            task.wait(16);
+            repeat
+                task.wait();
+                if (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame.Position - Value.Display.CFrame.Position).Magnitude > 20 then
+                    TweenTo(Value.Display.CFrame, 15);
+                    task.wait(16);
+                end;
+            until (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame.Position - Value.Display.CFrame.Position).Magnitude <= 20
+        end;
+    end;
+});
+
 local x25EggsDropdown = TabsRiftsEggs:AddDropdown("x25EggsDropdown", {
     Values = {};
     Default = 1;
@@ -476,17 +506,30 @@ local x25EggsDropdown = TabsRiftsEggs:AddDropdown("x25EggsDropdown", {
     end;
 });
 
-local Refreshx25EggsDropdown = TabsRiftsEggs:AddButton({
-    Text = "Refresh x25 Eggs Dropdown";
+TabsRiftsEggs:AddDivider();
+
+local RefreshDropdowns = TabsRiftsEggs:AddButton({
+    Text = "Refresh Dropdowns";
 
     Func = function()
-        local Foundx25Eggs = Fetchx25Eggs();
+        local Foundx25Eggs, FoundRiftEggs = FetchRiftEggs(true), FetchRiftEggs(false);
+
         if #Foundx25Eggs > 0 then
             x25EggsDropdown:SetValues(Foundx25Eggs);
         else
             Library:Notify({
                 Title = "Missing x25-egg";
                 Description = "Unable to find a active x25 Luck Egg.";
+                Time = 4;
+            });
+        end;
+
+        if #FoundRiftEggs > 0 then
+            RiftEggsDropdown:SetValues(FoundRiftEggs);
+        else
+            Library:Notify({
+                Title = "Missing rift-egg";
+                Description = "Unable to find a active Rift Egg.";
                 Time = 4;
             });
         end;
