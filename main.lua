@@ -1,10 +1,7 @@
 -- i made this for my alts to farm, so not all functions were made to be retard proof or amazing, most guis will have more stuff as well.
 -- but feel free to use or skid this. 🙂👍
 
--- v1.0 ; loadstring(game:HttpGet("https://raw.githubusercontent.com/s-eths/bubble-gum-simulator-infinity/refs/heads/main/main.lua", true))();
-
--- v1.1 UPDATE:
--- TODO: PotionsUse, RiftEggs
+-- v1.1 ; loadstring(game:HttpGet("https://raw.githubusercontent.com/s-eths/bubble-gum-simulator-infinity/refs/heads/main/main.lua", true))();
 
 getgenv().Functions = {
     AutoBlowBubbles = false;
@@ -48,11 +45,40 @@ end;
 
 local function TweenTo(Position, Speed)
     local CFrameValue = Instance.new("CFrameValue");
+
     CFrameValue.Value = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame;
     CFrameValue:GetPropertyChangedSignal("Value"):Connect(function()
         game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrameValue.Value;
     end);
+
     game:GetService("TweenService"):Create(CFrameValue, TweenInfo.new(Speed, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {Value = Position}):Play();
+end;
+
+local function Fetchx25Eggs()
+    local Foundx25Eggs = {};
+
+    for i, v in next, game:GetService("Workspace").Rendered.Rifts:GetChildren() do
+        if not table.find({"golden-chest", "royal-chest", "gift-rift"}, v.Name) then
+            if v.Display.SurfaceGui.Icon.Luck.Text == "x25" then
+                table.insert(Foundx25Eggs, v);
+            end;
+        end;
+    end;
+    
+    return Foundx25Eggs;
+end
+
+local function FancyNumberTranslator(FancyNumber)
+    local FancyNumbers = {
+        ["I"] = 1;
+        ["II"] = 2;
+        ["III"] = 3;
+        ["IV"] = 4;
+        ["V"] = 5;
+        ["VI"] = 6;
+    };
+
+    return FancyNumbers[FancyNumber];
 end;
 
 local Repository = "https://raw.githubusercontent.com/deividcomsono/Obsidian/main/";
@@ -172,7 +198,7 @@ local UntoggleAll = TabsUntoggle:AddButton({
         Toggles.BlackOutScreen:SetValue(false);
     end;
 
-    Tooltip = "this will untoggle EVERY toggle in the script, useful for when your unable to use remotes.";
+    Tooltip = "WARNING: This will untoggle EVERY toggle in the script.";
     Risky = true;
 });
 
@@ -285,10 +311,22 @@ TabsOtherFunctions:AddToggle("AutoGenieQuest", {
     end;
 });
 
+local RedeemAllCodes = TabsOtherFunctions:AddButton({
+    Text = "Redeem All Codes";
+
+    Func = function()
+        local Codes = {"easter", "RELEASE", "Lucky", "Thanks"};
+        for i, v in next, Codes do
+            game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Function"):InvokeServer("RedeemCode", v);          
+        end;
+    end;
+});
+
 local TabsPotionsCraft = Tabs.Potions:AddLeftGroupbox("Craft");
 
 local CraftLuckyPotions = TabsPotionsCraft:AddButton({
     Text = "Craft Lucky Potions";
+
     Func = function()
         for i = 2, 5 do
             game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("CraftPotion", "Lucky", i, true);
@@ -299,6 +337,7 @@ local CraftLuckyPotions = TabsPotionsCraft:AddButton({
 
 local CraftSpeedPotions = TabsPotionsCraft:AddButton({
     Text = "Craft Speed Potions";
+
     Func = function()
         for i = 2, 5 do
             game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("CraftPotion", "Speed", i, true);
@@ -309,6 +348,7 @@ local CraftSpeedPotions = TabsPotionsCraft:AddButton({
 
 local CraftCoinsPotions = TabsPotionsCraft:AddButton({
     Text = "Craft Coins Potions";
+
     Func = function()
         for i = 2, 5 do
             game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("CraftPotion", "Coins", i, true);
@@ -319,6 +359,7 @@ local CraftCoinsPotions = TabsPotionsCraft:AddButton({
 
 local CraftMythicPotions = TabsPotionsCraft:AddButton({
     Text = "Craft Mythic Potions";
+
     Func = function()
         for i = 2, 5 do
             game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("CraftPotion", "Mythic", i, true);
@@ -329,6 +370,7 @@ local CraftMythicPotions = TabsPotionsCraft:AddButton({
 
 local CraftAllPotions = TabsPotionsCraft:AddButton({
     Text = "Craft All Potions";
+
     Func = function()
         local PotionTypes = {"Lucky", "Speed", "Coins", "Mythic"};
 
@@ -343,19 +385,115 @@ local CraftAllPotions = TabsPotionsCraft:AddButton({
 
 local TabsPotionsUse = Tabs.Potions:AddRightGroupbox("Use");
 
+local SelectPotionType = TabsPotionsUse:AddDropdown("SelectPotionType", {
+    Values = {"Lucky", "Speed", "Coins", "Mythic"};
+    Default = 1;
 
+    Text = "Select Potion Type";
 
--- local args = {
---     [1] = "UsePotion",
---     [2] = "Coins",
---     [3] = 2
--- }
+    Callback = function(Value)
+        return;
+    end;
+});
 
--- game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))    
+local SelectPotionRarity = TabsPotionsUse:AddDropdown("SelectPotionRarity", {
+    Values = {"I", "II", "III", "IV", "V", "VI"};
+    Default = 1;
+
+    Text = "Select Potion Rarity";
+
+    Callback = function(Value)
+        return;
+    end;
+});
+
+local SelectPotionAmount = TabsPotionsUse:AddSlider("SelectPotionAmount", {
+    Text = "Select Potion Amount";
+    Default = 1;
+    Min = 1;
+    Max = 100;
+    Rounding = 1;
+
+    Callback = function(Value)
+        return;
+    end;
+});
+
+local UsePotions = TabsPotionsUse:AddButton({
+    Text = "Use Potions";
+
+    Func = function()
+        print()
+        for i = 1, math.floor(SelectPotionAmount.Value + 0.5) do
+            task.wait(0.3);
+            game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("UsePotion", SelectPotionType.Value, FancyNumberTranslator(SelectPotionRarity.Value));
+        end;
+    end;
+});
+
+TabsPotionsUse:AddDivider();
+
+local UseHatchingPotions = TabsPotionsUse:AddButton({
+    Text = "Use Hatching Potions";
+
+    Func = function()
+        local PotionTypes = {"Lucky", "Speed", "Mythic"};
+
+        for _, v in next, PotionTypes do
+            for i = 1, 35 do
+                task.wait(0.3);
+                game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("UsePotion", v, 5);
+            end;
+        end;
+    end;
+
+    Tooltip = "WARNING: This will use 10 hours of Lucky V, Speed V and Mythic V Potions.";
+    Risky = true;
+});
 
 local TabsRiftsEggs = Tabs.Rifts:AddLeftGroupbox("Eggs");
 
-local TabsRiftsChests = Tabs.Rifts:AddLeftGroupbox("Chests");
+local x25EggsDropdown = TabsRiftsEggs:AddDropdown("x25EggsDropdown", {
+    Values = {};
+    Default = 1;
+
+    Text = "x25 Eggs";
+
+    Callback = function(Value)
+        if Value then
+            game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("Teleport", "Workspace.Worlds.The Overworld.FastTravel.Spawn");
+            task.wait(1);
+            TweenTo(Value.Display.CFrame, 15);
+            task.wait(16);
+            repeat
+                task.wait();
+                if (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame.Position - Value.Display.CFrame.Position).Magnitude > 20 then
+                    TweenTo(Value.Display.CFrame, 15);
+                    task.wait(16);
+                end;
+            until (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame.Position - Value.Display.CFrame.Position).Magnitude <= 20
+        end;
+    end;
+});
+
+local Refreshx25EggsDropdown = TabsRiftsEggs:AddButton({
+    Text = "Refresh x25 Eggs Dropdown";
+
+    Func = function()
+        local Foundx25Eggs = Fetchx25Eggs();
+        if #Foundx25Eggs > 0 then
+            x25EggsDropdown:SetValues(Foundx25Eggs);
+        else
+            Library:Notify({
+                Title = "Missing x25-egg";
+                Description = "Unable to find a active x25 Luck Egg.";
+                Time = 4;
+            });
+        end;
+    end;
+});
+
+local TabsRiftsChests = Tabs.Rifts:AddRightGroupbox("Chests");
 
 TabsRiftsChests:AddToggle("UseAllGoldenKeys", {
     Text = "Use All Golden Keys";
@@ -373,16 +511,23 @@ TabsRiftsChests:AddToggle("UseAllGoldenKeys", {
                     task.wait(16);
                     repeat
                         task.wait();
-                        if (game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.Position - game:GetService("Workspace").Rendered.Rifts["golden-chest"].Chest["golden-chest"].CFrame.Position).Magnitude > 20 then
+                        if (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame.Position - game:GetService("Workspace").Rendered.Rifts["golden-chest"].Chest["golden-chest"].CFrame.Position).Magnitude > 20 then
                             TweenTo(game:GetService("Workspace").Rendered.Rifts["golden-chest"].Chest["golden-chest"].CFrame + Vector3.new(0, 6, 0), 15);
                             task.wait(16);
                         end;
-                    until (game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.Position - game:GetService("Workspace").Rendered.Rifts["golden-chest"].Chest["golden-chest"].CFrame.Position).Magnitude <= 20
+                    until (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame.Position - game:GetService("Workspace").Rendered.Rifts["golden-chest"].Chest["golden-chest"].CFrame.Position).Magnitude <= 20
                     repeat
                         task.wait();
                         game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("UnlockRiftChest", "golden-chest", false);
                     until not Functions.UseAllGoldenKeys or not game:GetService("Workspace").Rendered.Rifts:FindFirstChild("golden-chest");
-                end; 
+                else
+                    Library:Notify({
+                        Title = "Missing golden-chest";
+                        Description = "Unable to find a active Golden Chest.";
+                        Time = 4;
+                    });
+                    Toggles.UseAllGoldenKeys:SetValue(false);
+                end;
             end;
         end);
     end;
@@ -404,16 +549,23 @@ TabsRiftsChests:AddToggle("UseAllRoyalKeys", {
                     task.wait(16);
                     repeat
                         task.wait();
-                        if (game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.Position - game:GetService("Workspace").Rendered.Rifts["golden-chest"].Chest["golden-chest"].CFrame.Position).Magnitude > 20 then
+                        if (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame.Position - game:GetService("Workspace").Rendered.Rifts["golden-chest"].Chest["golden-chest"].CFrame.Position).Magnitude > 20 then
                             TweenTo(game:GetService("Workspace").Rendered.Rifts["royal-chest"].Chest["royal-chest"].CFrame + Vector3.new(0, 6, 0), 15);
                             task.wait(16);
                         end;
-                    until (game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.Position - game:GetService("Workspace").Rendered.Rifts["golden-chest"].Chest["golden-chest"].CFrame.Position).Magnitude <= 20
+                    until (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame.Position - game:GetService("Workspace").Rendered.Rifts["golden-chest"].Chest["golden-chest"].CFrame.Position).Magnitude <= 20
                     repeat
                         task.wait();
                         game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("UnlockRiftChest", "royal-chest", false);
                     until not Functions.UseAllGoldenKeys or not game:GetService("Workspace").Rendered.Rifts:FindFirstChild("royal-chest");
-                end; 
+                else
+                    Library:Notify({
+                        Title = "Missing royal-chest";
+                        Description = "Unable to find a active Royal Chest.";
+                        Time = 4;
+                    });
+                    Toggles.UseAllRoyalKeys:SetValue(false);
+                end;
             end;
         end);
     end;
