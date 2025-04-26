@@ -728,6 +728,21 @@ TabsFPSSettings:AddSlider("CustomFPSCap", {
     end;
 });
 
+local CurrentFPSLabel = TabsFPSSettings:AddLabel("Current FPS: ???");
+
+task.spawn(function()
+    local Frames, Last = 0, tick();
+
+    game:GetService("RunService").RenderStepped:Connect(function()
+        Frames += 1;
+        if tick() - Last >= 1 then
+            CurrentFPSLabel:SetText("Current FPS: " .. Frames);
+            Frames = 0
+            Last = tick();
+        end;
+    end);
+end);
+
 local TabsUISettings = Tabs["UI Settings"]:AddLeftGroupbox("Menu");
 
 TabsUISettings:AddToggle("KeybindMenuOpen", {
