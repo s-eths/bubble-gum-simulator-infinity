@@ -1,7 +1,7 @@
 -- i made this for my alts to farm, so not all functions were made to be retard proof or amazing, most guis will have more stuff as well.
 -- but feel free to use or skid this. 🙂👍
 
--- v1.2 ; loadstring(game:HttpGet("https://raw.githubusercontent.com/s-eths/bubble-gum-simulator-infinity/refs/heads/main/main.lua", true))();
+-- v1.3 ; loadstring(game:HttpGet("https://raw.githubusercontent.com/s-eths/bubble-gum-simulator-infinity/refs/heads/main/main.lua", true))();
 
 getgenv().Functions = {
     AutoBlowBubbles = false;
@@ -10,6 +10,7 @@ getgenv().Functions = {
     FasterEggs = false;
 
     AutoClaimPlaytimeRewards = false;
+    AutoClaimSeasonRewards = false;
     AutoClaimWheelSpin = false;
     AutoClaimChests = false;
     AutoBuyFromMarkets = false;
@@ -183,9 +184,29 @@ TabsMainFunctions:AddToggle("FasterEggs", {
     end;
 });
 
-local TabsUntoggle = Tabs.Main:AddLeftGroupbox("Untoggle");
+local TabsToggles = Tabs.Main:AddLeftGroupbox("TabsToggles");
 
-local UntoggleAll = TabsUntoggle:AddButton({
+local UntoggleAll = TabsToggles:AddButton({
+    Text = "Toggle Best";
+
+    Func = function()
+        Toggles.AutoBlowBubbles:SetValue(true);
+        Toggles.AutoCollectPickups:SetValue(true);
+        Toggles.FasterEggs:SetValue(true);
+        Toggles.AutoClaimPlaytimeRewards:SetValue(true);
+        Toggles.AutoClaimSeasonRewards:SetValue(true);
+        Toggles.AutoClaimWheelSpin:SetValue(true);
+        Toggles.AutoClaimChests:SetValue(true);
+        Toggles.AutoBuyFromMarkets:SetValue(true);
+        Toggles.AutoOpenMysteryBox:SetValue(true);
+        Toggles.AutoGenieQuest:SetValue(true);
+    end;
+
+    Tooltip = "WARNING: This will toggle:\nAutoBlowBubbles, AutoCollectPickups, FasterEggs\nAutoClaimPlaytimeRewards, AutoClaimWheelSpin, AutoClaimChests\nAutoBuyFromMarkets, AutoOpenMysteryBox, AutoGenieQuest";
+    Risky = true;
+});
+
+local UntoggleAll = TabsToggles:AddButton({
     Text = "Untoggle All";
 
     Func = function()
@@ -194,6 +215,7 @@ local UntoggleAll = TabsUntoggle:AddButton({
         Toggles.AutoCollectPickups:SetValue(false);
         Toggles.FasterEggs:SetValue(false);
         Toggles.AutoClaimPlaytimeRewards:SetValue(false);
+        Toggles.AutoClaimSeasonRewards:SetValue(false);
         Toggles.AutoClaimWheelSpin:SetValue(false);
         Toggles.AutoClaimChests:SetValue(false);
         Toggles.AutoBuyFromMarkets:SetValue(false);
@@ -239,6 +261,21 @@ TabsOtherFunctions:AddToggle("AutoClaimWheelSpin", {
             while Functions.AutoClaimWheelSpin do
                 task.wait();
                 game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("ClaimFreeWheelSpin");
+            end;
+        end);
+    end;
+});
+
+TabsOtherFunctions:AddToggle("AutoClaimSeasonRewards", {
+    Text = "Auto Claim Season Rewards";
+    Default = false;
+
+    Callback = function(Value)
+        getgenv().Functions.AutoClaimSeasonRewards = Value;
+        task.spawn(function()
+            while Functions.AutoClaimSeasonRewards do
+                task.wait();
+                game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("ClaimSeason");
             end;
         end);
     end;
@@ -658,10 +695,12 @@ local TeleportToZen = TabsMainTeleports:AddButton({
     end;
 });
 
-local TeleportToEvent = TabsMainTeleports:AddButton({
-    Text = "Teleport to Event";
+local TeleportToHatchingZone = TabsMainTeleports:AddButton({
+    Text = "Teleport to Hatching Zone";
     Func = function()
-        game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("Teleport", "Workspace.Event.Portal.Spawn");
+        game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("Teleport", "Workspace.Worlds.The Overworld.FastTravel.Spawn");
+        task.wait(0.3)
+        TweenTo(CFrame.new(-57, 9, -27), 1.4);
     end;
 });
 
@@ -679,9 +718,58 @@ local TeleportToCoinFarmArea = TabsOtherTeleports:AddButton({
 local TeleportToBestEgg = TabsOtherTeleports:AddButton({
     Text = "Teleport To Best Egg";
     Func = function()
-        game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("Teleport", "Workspace.Event.Portal.Spawn");
+        game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("Teleport", "Workspace.Worlds.The Overworld.FastTravel.Spawn");
         task.wait(0.3);
-        TweenTo(CFrame.new(-395, 12030, -59), 5);
+        TweenTo(CFrame.new(15, 10, -5), 0.5);
+    end;
+});
+
+local TabsPlayerTeleports = Tabs.Teleports:AddRightGroupbox("Player Teleports");
+
+local SelectPlayer = TabsPlayerTeleports:AddDropdown("SelectPlayer", {
+    Values = {};
+    Default = 1;
+
+    Text = "Select Player";
+
+    Callback = function(Value)
+        return;
+    end;
+});
+
+local TeleportToPlayer = TabsPlayerTeleports:AddButton({
+    Text = "Teleport To Player";
+
+    Func = function()
+        game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("Teleport", "Workspace.Worlds.The Overworld.FastTravel.Spawn");
+        task.wait(1);
+        TweenTo(game:GetService("Players")[SelectPlayer.Value].Character.HumanoidRootPart.CFrame, 15);
+        task.wait(16);
+        repeat
+            task.wait();
+            if (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame.Position - game:GetService("Players")[SelectPlayer.Value].Character.HumanoidRootPart.CFrame.Position).Magnitude > 20 then
+                TweenTo(game:GetService("Players")[SelectPlayer.Value].Character.HumanoidRootPart.CFrame, 15);
+                task.wait(16);
+            end;
+        until (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame.Position - game:GetService("Players")[SelectPlayer.Value].Character.HumanoidRootPart.CFrame.Position).Magnitude <= 20
+    end;
+});
+
+TabsPlayerTeleports:AddDivider();
+
+local RefreshDropdowns = TabsPlayerTeleports:AddButton({
+    Text = "Refresh Dropdowns";
+
+    Func = function()
+        local Players = {};
+
+        for i, v in next, game:GetService("Players"):GetPlayers() do
+            if v.Name ~= game:GetService("Players").LocalPlayer.Name then
+                table.insert(Players, v.Name);
+            end;
+        end;
+
+        SelectPlayer:SetValues(Players);
     end;
 });
 
