@@ -973,7 +973,7 @@ TabsFPSSettings:AddToggle("FixFPSCap", {
         getgenv().Functions.FixFPSCap = Value;
         task.spawn(function()
             while Functions.FixFPSCap do
-                setfpscap(CustomFPSCap);
+                setfpscap(CustomFPSCap.Value);
                 task.wait(60);
             end;
         end);
