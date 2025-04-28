@@ -133,7 +133,7 @@ local Toggles = Library.Toggles;
 
 local Window = Library:CreateWindow({
     Title = "cca is a monkey 🐒";
-    Footer = "Made by @s.eths | v1.1c";
+    Footer = "Made by @s.eths | v1.4c";
     NotifySide = "Right";
     ShowCustomCursor = true;
 });
@@ -363,6 +363,7 @@ TabsOtherFunctions:AddToggle("AutoOpenMysteryBox", {
             while Functions.AutoOpenMysteryBox do
                 task.wait();
                 game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("UseGift", "Mystery Box", 1);
+                game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("UseGift", "Golden Box", 1);
                 for i, v in next, game:GetService("Workspace").Rendered.Gifts:GetChildren() do
                     game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer("ClaimGift", v.Name);
                     task.wait();
@@ -917,9 +918,10 @@ local ToggleCPUSaver = TabsCPUSettings:AddButton({
     Func = function()
         Toggles.Disable3DRendering:SetValue(true);
         Toggles.BlackOutScreen:SetValue(true);
-        setfpscap(10);
+        CustomFPSCap:SetValue(10);
+        Toggles.FixFPSCap:SetValue(true);
     end;
-    Tooltip = "WARNING: This will toggle:\nDisable3DRendering, BlackOutScreen and setfpscap to 10";
+    Tooltip = "WARNING: This will toggle:\nDisable3DRendering, BlackOutScreen, FixFPSCap and set CustomFPSCap to 10";
     Risky = true;
 });
 
